@@ -93,8 +93,7 @@ fun getTypeReference(sourceType: TLType, types: HashMap<String, TLTypeDef>): TLT
         else{
             types.get(rawType.name)!!
         }
-    } else if (sourceType is TLTypeAny)
-    {
+    } else if (sourceType is TLTypeAny){
         TLAnyTypeDef()
     } else if (sourceType is TLTypeGeneric)
     {

@@ -1,0 +1,91 @@
+
+package org.telegram.api;
+
+
+import org.telegram.tl.*;
+import java.io.*;
+
+import static org.telegram.tl.StreamingUtils.*;
+
+public class TLInputMediaUploadedThumbVideo extends TLAbsInputMedia {
+    public static final int CLASS_ID = 0xe628a145;
+
+    public int getClassId() {
+        return CLASS_ID;
+    }
+
+
+    protected org.telegram.api.TLInputFile file;
+
+    protected org.telegram.api.TLInputFile thumb;
+
+    protected int duration;
+
+    protected int w;
+
+    protected int h;
+
+
+    public org.telegram.api.TLInputFile getFile() {
+        return file;
+    }
+
+    public void setFile(org.telegram.api.TLInputFile value) {
+        this.file = value;
+    }
+
+    public org.telegram.api.TLInputFile getThumb() {
+        return thumb;
+    }
+
+    public void setThumb(org.telegram.api.TLInputFile value) {
+        this.thumb = value;
+    }
+
+    public int getDuration() {
+        return duration;
+    }
+
+    public void setDuration(int value) {
+        this.duration = value;
+    }
+
+    public int getW() {
+        return w;
+    }
+
+    public void setW(int value) {
+        this.w = value;
+    }
+
+    public int getH() {
+        return h;
+    }
+
+    public void setH(int value) {
+        this.h = value;
+    }
+
+
+    @Override
+    public void serializeBody(OutputStream stream) throws IOException {
+
+        writeTLObject(this.file, stream);
+        writeTLObject(this.thumb, stream);
+        writeInt(this.duration, stream);
+        writeInt(this.w, stream);
+        writeInt(this.h, stream);
+    }
+
+
+    @Override
+    public void deserializeBody(InputStream stream, TLContext context) throws IOException {
+
+        this.file = (org.telegram.api.TLInputFile)readTLObject(stream, context);
+        this.thumb = (org.telegram.api.TLInputFile)readTLObject(stream, context);
+        this.duration = readInt(stream);
+        this.w = readInt(stream);
+        this.h = readInt(stream);
+    }
+
+}

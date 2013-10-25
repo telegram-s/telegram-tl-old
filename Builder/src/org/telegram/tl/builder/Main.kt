@@ -11,11 +11,36 @@ import com.fasterxml.jackson.databind.JsonNode
  * Time: 8:55
  */
 
+fun printUsage()
+{
+    println("USAGE:")
+    println("tlcompiler -in <path_to_definition>")
+}
+
 fun main(args: Array<String>) {
-    var sourceFileName = "/Users/ex3ndr/Develop/Sources/TypeLanguage/definitions.json"
+    println("TL Compiler by Stepan Korshakov, Telegraph LLC (c) 2013 v0.1")
+
+    var inputDefinition: String?
+
+    if (args.get(0) != "-in"){
+        printUsage()
+        return
+    }
+    else {
+        inputDefinition = args.get(1)
+    }
+
+    var destFolder = File(inputDefinition!!).directory.canonicalPath + "/out"
+
+    println("Reading definitions...")
     var mapper = ObjectMapper()
-    var sourceJsonTree = mapper.readValue (File(sourceFileName), javaClass<JsonNode>()) as  JsonNode
+    var sourceJsonTree = mapper.readValue (File(inputDefinition!!), javaClass<JsonNode>()) as JsonNode
     var definition = buildFromJson(sourceJsonTree)
+    println("Building objects tl-model...")
     checkDefinition(definition)
     var model = buildModel(definition)
+    println("Converting to java model...")
+    var javaModel = convertToJavaModel(model)
+    println("Generating classes for library...")
+    writeJavaClasses(javaModel, destFolder)
 }
