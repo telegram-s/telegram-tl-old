@@ -12,6 +12,37 @@ tl-builder is utility for converting json-representation of TL to Java library
 Prebuild library
 ===========
 You always can download prebuilded jars and source classes for every level of api.
+Latest release: https://github.com/ex3ndr/telegram-tl/releases/tag/0.1
+
+Actual api levels
+-----------
+### Api Level #1
+Jar:
+https://github.com/ex3ndr/telegram-tl/releases/download/0.1/tl-api-1.jar
+
+Source:
+https://github.com/ex3ndr/telegram-tl/releases/download/0.1/tl-api-1.src.zip
+
+### Api Level #7
+Jar:
+https://github.com/ex3ndr/telegram-tl/releases/download/0.1/tl-api-7.jar
+
+Source:
+https://github.com/ex3ndr/telegram-tl/releases/download/0.1/tl-api-7.src.zip
+
+### Api Level #8
+Jar:
+https://github.com/ex3ndr/telegram-tl/releases/download/0.1/tl-api-8.jar
+
+Source:
+https://github.com/ex3ndr/telegram-tl/releases/download/0.1/tl-api-8.src.zip
+
+### Api Level #9
+Jar:
+https://github.com/ex3ndr/telegram-tl/releases/download/0.1/tl-api-9.jar
+
+Source:
+https://github.com/ex3ndr/telegram-tl/releases/download/0.1/tl-api-9.src.zip
 
 Usage of toolkit
 ===========
