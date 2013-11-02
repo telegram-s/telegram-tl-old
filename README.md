@@ -1,4 +1,4 @@
-telegram-tl
+Telegram Tl Java Library
 ===========
 
 TL-Library and TL-Builder for working with TL in java wint telegram.org project.
@@ -8,6 +8,8 @@ More information about TL: http://core.telegram.org/mtproto/TL
 tl-core is basic library to support parsing and serializing of TL classes
 
 tl-builder is utility for converting json-representation of TL to Java library
+
+Licence: MIT
 
 Prebuild library
 ===========
