@@ -83,5 +83,5 @@ fun main(args: Array<String>) {
     println("[Sources]")
     println("\t" + destFolder + "/src/")
     println("[JAR]")
-    println("\t" +destFolder + "/tl-api.jar")
+    println("\t" + destFolder + "/tl-api.jar")
 }
