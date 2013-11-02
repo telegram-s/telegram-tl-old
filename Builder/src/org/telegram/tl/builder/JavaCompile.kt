@@ -67,7 +67,7 @@ fun buildJar(classesFolder: String, jarName: String, workingFolder: String) {
     var files = File(classesFolder).recursiveFind {(x) -> x.extension == "class" };
 
     for(f in files) {
-        args += f.getAbsolutePath() + " ";
+        args += f.getAbsolutePath().substring(workingFolder.size + 1) + " ";
     }
 
     exec("jar cf " + jarName + " " + args, workingFolder)
