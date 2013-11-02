@@ -1,5 +1,6 @@
 package org.telegram.tl;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -17,6 +18,12 @@ public abstract class TLObject {
 
     public abstract int getClassId();
 
+    public byte[] serialize() throws IOException {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        serialize(stream);
+        return stream.toByteArray();
+    }
+
     public void serialize(OutputStream stream) throws IOException {
         writeInt(getClassId(), stream);
         serializeBody(stream);
@@ -24,6 +31,10 @@ public abstract class TLObject {
 
     public void deserialize(InputStream stream, TLContext context) throws IOException {
         int classId = readInt(stream);
+        if (classId != getClassId()) {
+            throw new DeserializeException("Wrong class id. Founded:" + Integer.toHexString(classId) +
+                    ", expected: " + Integer.toHexString(getClassId()));
+        }
         deserializeBody(stream, context);
     }
 

@@ -242,6 +242,34 @@ fun writeJavaClasses(model: JavaModel, path: String)
                         .replace("{setter}", p.setterName)
             }
 
+            if (t.constructors.get(0).parameters.size > 0)
+            {
+                var constructorArgs = "";
+                var constructorBody = "";
+                for(p in t.constructors.get(0).parameters)
+                {
+                    if (constructorArgs != ""){
+                        constructorArgs += ", ";
+                    }
+
+                    constructorArgs += JavaConstructorArgTemplate
+                            .replace("{type}", p.reference!!.javaName)
+                            .replace("{int}", p.internalName)
+
+                    constructorBody += JavaConstructorBodyTemplate
+                            .replace("{type}", p.reference!!.javaName)
+                            .replace("{int}", p.internalName) + "\n";
+                }
+                generatedFile = generatedFile.replace("{constructor}",
+                        JavaConstructorTemplate
+                                .replace("{name}", t.javaTypeName)
+                                .replace("{args}", constructorArgs)
+                                .replace("{body}", constructorBody))
+            }
+            else{
+                generatedFile = generatedFile.replace("{constructor}", "")
+            }
+
             generatedFile = generatedFile.replace("{getter-setters}", getterSetter)
 
             generatedFile = generatedFile.replace("{serialize}", buildSerializer(t.constructors.get(0).parameters))
@@ -319,6 +347,33 @@ fun writeJavaClasses(model: JavaModel, path: String)
                             .replace("{setter}", p.setterName)
                 }
 
+                if (constr.parameters.size > 0)
+                {
+                    var constructorArgs = "";
+                    var constructorBody = "";
+                    for(p in constr.parameters)
+                    {
+                        if (constructorArgs != ""){
+                            constructorArgs += ", ";
+                        }
+
+                        constructorArgs += JavaConstructorArgTemplate
+                                .replace("{type}", p.reference!!.javaName)
+                                .replace("{int}", p.internalName)
+
+                        constructorBody += JavaConstructorBodyTemplate
+                                .replace("{type}", p.reference!!.javaName)
+                                .replace("{int}", p.internalName) + "\n";
+                    }
+                    var constructor = JavaConstructorTemplate
+                            .replace("{name}", constr.javaClassName)
+                            .replace("{args}", constructorArgs)
+                            .replace("{body}", constructorBody);
+                    generatedFile = generatedFile.replace("{constructor}", constructor)
+                } else {
+                    generatedFile = generatedFile.replace("{constructor}", "")
+                }
+
                 generatedFile = generatedFile.replace("{getter-setters}", getterSetter)
 
                 generatedFile = generatedFile.replace("{serialize}", buildSerializer(constr.parameters))
@@ -337,7 +392,8 @@ fun writeJavaClasses(model: JavaModel, path: String)
         generatedFile = generatedFile
                 .replace("{name}", m.requestClassName)
                 .replace("{package}", JavaPackage + "." + JavaMethodPackage)
-                .replace("{class_id}", "0x" + Integer.toHexString(m.tlMethod.id));
+                .replace("{class_id}", "0x" + Integer.toHexString(m.tlMethod.id))
+                .replace("{return_type}", m.returnReference!!.javaName);
 
         var fields = "";
         for(p in m.parameters)
@@ -358,18 +414,129 @@ fun writeJavaClasses(model: JavaModel, path: String)
                     .replace("{setter}", p.setterName)
         }
 
+        if (m.parameters.size > 0)
+        {
+            var constructorArgs = "";
+            var constructorBody = "";
+            for(p in m.parameters)
+            {
+                if (constructorArgs != ""){
+                    constructorArgs += ", ";
+                }
+
+                constructorArgs += JavaConstructorArgTemplate
+                        .replace("{type}", p.reference!!.javaName)
+                        .replace("{int}", p.internalName)
+
+                constructorBody += JavaConstructorBodyTemplate
+                        .replace("{type}", p.reference!!.javaName)
+                        .replace("{int}", p.internalName) + "\n";
+            }
+            var constructor = JavaConstructorTemplate
+                    .replace("{name}", m.requestClassName)
+                    .replace("{args}", constructorArgs)
+                    .replace("{body}", constructorBody);
+            generatedFile = generatedFile.replace("{constructor}", constructor)
+        } else {
+            var constructor = JavaConstructorTemplate
+                    .replace("{name}", m.requestClassName)
+                    .replace("{args}", "")
+                    .replace("{body}", "");
+            generatedFile = generatedFile.replace("{constructor}", constructor)
+        }
+
         generatedFile = generatedFile.replace("{getter-setters}", getterSetter)
 
         generatedFile = generatedFile.replace("{serialize}", buildSerializer(m.parameters))
         generatedFile = generatedFile.replace("{deserialize}", buildDeserializer(m.parameters))
 
-        generatedFile = generatedFile.replace("{responseParser}", "")
+
+        var responseParser = JavaMethodParserTemplate.replace("{return_type}",
+                m.returnReference!!.javaName);
+        if (m.returnReference is JavaTypeVectorReference) {
+            var vectorReference = m.returnReference as JavaTypeVectorReference;
+            if (vectorReference.internalReference is JavaTypeBuiltInReference) {
+                var intReference = vectorReference.internalReference as JavaTypeBuiltInReference;
+                if (intReference.javaName == "int") {
+                    responseParser = responseParser.replace("{body}", JavaMethodParserBodyIntVector)
+                } else if (intReference.javaName == "long") {
+                    responseParser = responseParser.replace("{body}", JavaMethodParserBodyLongVector)
+                }
+                else{
+                    throw RuntimeException("Unsupported vector internal reference")
+                }
+            }
+            else if (vectorReference.internalReference is JavaTypeTlReference) {
+                var tlReference = vectorReference.internalReference as JavaTypeTlReference;
+                responseParser = responseParser.replace("{body}",
+                        JavaMethodParserBodyVector.replace("{vector_type}", tlReference.javaName))
+            } else {
+                throw RuntimeException("Unsupported built-in reference")
+            }
+        }
+        else if (m.returnReference is JavaTypeTlReference) {
+            var returnReference = m.returnReference as JavaTypeTlReference;
+            responseParser = responseParser.replace("{body}",
+                    JavaMethodParserBodyGeneral.replace("{return_type}", returnReference.javaName))
+        } else {
+
+            var functionalParameter: JavaParameter? = null
+            for(p in m.parameters)
+            {
+                if (p.reference is JavaTypeFunctionalReference) {
+                    functionalParameter = p;
+                    break
+                }
+            }
+
+            if (functionalParameter == null) {
+                throw RuntimeException("Any reference without functional reference")
+            }
+
+            // throw RuntimeException("Unsupported return reference")
+            responseParser = responseParser.replace("{body}",
+                    JavaMethodParserBodyReference.replace("{return_type}", "TLObject")
+                            .replace("{int}", functionalParameter!!.internalName))
+        }
+
+        generatedFile = generatedFile.replace("{responseParser}", responseParser)
 
         var directory = (JavaPackage + "." + JavaMethodPackage).split('.').fold(path, {(x, t) -> x + "/" + t });
         val destFile = File(directory + "/" + m.requestClassName + ".java");
         File(directory).mkdirs()
         destFile.writeText(generatedFile, "utf-8")
     }
+
+    var requests = ""
+
+    for(m in model.methods) {
+
+        var args = "";
+        var methodArgs = "";
+        for(p in m.parameters) {
+            if (args != "") {
+                args += ", ";
+            }
+            if (methodArgs != "") {
+                methodArgs += ", ";
+            }
+            methodArgs += p.internalName;
+            args += p.reference!!.javaName + " " + p.internalName;
+        }
+
+        requests += JavaRequesterMethod.replace("{return_type}", m.returnReference!!.javaName)
+                .replace("{method_name}", m.methodName)
+                .replace("{method_class}", m.requestClassName)
+                .replace("{args}", args)
+                .replace("{method_args}", methodArgs)
+    }
+
+    var directory = JavaPackage.split('.').fold(path, {(x, t) -> x + "/" + t });
+    val destRequesterFile = File(directory + "/TLApiRequester.java");
+    File(directory).mkdirs()
+    destRequesterFile.writeText(JavaRequesterTemplate
+            .replace("{methods}", requests)
+            .replace("{package}", JavaPackage), "utf-8")
 
 
     var contextInit = ""
@@ -390,7 +557,6 @@ fun writeJavaClasses(model: JavaModel, path: String)
         }
     }
 
-    var directory = JavaPackage.split('.').fold(path, {(x, t) -> x + "/" + t });
     val destFile = File(directory + "/TLApiContext.java");
     File(directory).mkdirs()
     destFile.writeText(JavaContextTemplate

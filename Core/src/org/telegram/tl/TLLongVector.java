@@ -7,4 +7,7 @@ package org.telegram.tl;
  * Time: 16:02
  */
 public class TLLongVector extends TLVector<Long> {
+    public TLLongVector() {
+        setDestClass(Long.class);
+    }
 }

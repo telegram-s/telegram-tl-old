@@ -21,6 +21,12 @@ public class {name} extends TLObject {
 
     public static final int CLASS_ID = {class_id};
 
+    public {name}() {
+
+    }
+
+{constructor}
+
     public int getClassId() {
         return CLASS_ID;
     }
@@ -30,6 +36,37 @@ public class {name} extends TLObject {
 {serialize}
 {deserialize}
 }
+"""
+
+var JavaRequesterTemplate =
+        """
+package {package};
+""" + JavaImports + """
+import {package}.requests.*;
+
+public class TLApiRequester {
+
+    private RequestExecutor executor;
+    private TLContext context;
+
+    public TLApiRequester(RequestExecutor executor, TLContext context) {
+        this.executor = executor;
+        this.context = context;
+    }
+
+    protected <T extends TLObject> T doRpcCall(TLMethod<T> method) throws IOException {
+       return method.deserializeResponse(executor.doRpcCall(method.serialize()), context);
+    }
+
+{methods}
+}
+"""
+
+var JavaRequesterMethod =
+        """
+    public {return_type} {method_name}({args}) throws IOException {
+        return doRpcCall(new {method_class}({method_args}));
+    }
 """
 
 var JavaContextTemplate =
@@ -43,6 +80,7 @@ public class TLApiContext extends TLContext {
     }
 }
 """
+
 var JavaContextIntRecord = """
         registerClass({id}, {type}.class);"""
 
@@ -50,13 +88,15 @@ var JavaMethodTemplate =
         """
 package {package};
 """ + JavaImports + """
-public class {name} extends TLMethod {
+public class {name} extends TLMethod<{return_type}> {
 
     public static final int CLASS_ID = {class_id};
 
     public int getClassId() {
         return CLASS_ID;
     }
+
+{constructor}
 
 {responseParser}
 
@@ -66,6 +106,42 @@ public class {name} extends TLMethod {
 {deserialize}
 }
 """
+
+var JavaMethodParserBodyGeneral = """
+        TLObject res = readTLObject(stream, context);
+        if (res == null) {
+            throw new IOException("Unable to parse response");
+        }
+        if (res instanceof {return_type}) {
+            return ({return_type})res;
+        }
+        else {
+            throw new IOException("Incorrect response type. Expected {return_type}, got: " + res.getClass().getCanonicalName());
+        }
+"""
+
+var JavaMethodParserBodyVector = """
+        return readTLVector(stream, context);
+"""
+
+var JavaMethodParserBodyIntVector = """
+        return readTLIntVector(stream, context);
+"""
+
+var JavaMethodParserBodyLongVector = """
+        return readTLLongVector(stream, context);
+"""
+
+var JavaMethodParserBodyReference = """
+        return ({return_type}) {int}.deserializeResponse(stream, context);
+"""
+
+var JavaMethodParserTemplate =
+        """
+    public {return_type} deserializeResponse(InputStream stream, TLContext context) throws IOException {
+{body}
+    }
+        """
 
 var JavaAbsClassTemplate =
         """
@@ -87,6 +163,12 @@ package {package};
 
 public class {name} extends {base-name} {
     public static final int CLASS_ID = {class_id};
+
+    public {name}() {
+
+    }
+
+{constructor}
 
     public int getClassId() {
         return CLASS_ID;
@@ -125,6 +207,15 @@ var JavaSerializeTemplate = """
 {body}
     }
 """
+
+var JavaConstructorTemplate = """
+    public {name} ({args}) {
+{body}
+    }
+"""
+
+var JavaConstructorArgTemplate = """        {type} _{int}""";
+var JavaConstructorBodyTemplate = """        this.{int} = _{int};""";
 
 var JavaSerializeInt = """
         writeInt(this.{int}, stream);"""
@@ -181,7 +272,7 @@ var JavaDeserializeVector = """
         this.{int} = readTLVector(stream, context);"""
 
 var JavaDeserializeIntVector = """
-        this.{int} = readTLIntVector(stream);"""
+        this.{int} = readTLIntVector(stream, context);"""
 
 var JavaDeserializeLongVector = """
-        this.{int} = readTLLongVector(stream);"""
+        this.{int} = readTLLongVector(stream, context);"""

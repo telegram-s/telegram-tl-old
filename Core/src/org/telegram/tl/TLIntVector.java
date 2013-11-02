@@ -7,4 +7,7 @@ package org.telegram.tl;
  * Time: 16:02
  */
 public class TLIntVector extends TLVector<Integer> {
+    public TLIntVector() {
+        setDestClass(Integer.class);
+    }
 }

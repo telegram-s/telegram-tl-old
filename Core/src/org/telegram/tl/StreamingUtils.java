@@ -153,11 +153,11 @@ public class StreamingUtils {
     }
 
     public static TLObject readTLObject(InputStream stream, TLContext context) throws IOException {
-        return context.parseMessage(stream);
+        return context.deserializeMessage(stream);
     }
 
     public static TLMethod readTLMethod(InputStream stream, TLContext context) throws IOException {
-        return (TLMethod) context.parseMessage(stream);
+        return (TLMethod) context.deserializeMessage(stream);
     }
 
     public static byte[] readBytes(int count, InputStream stream) throws IOException {
@@ -195,21 +195,15 @@ public class StreamingUtils {
     }
 
     public static TLVector readTLVector(InputStream stream, TLContext context) throws IOException {
-        TLVector res = new TLVector();
-        res.deserialize(stream, context);
-        return res;
+        return context.deserializeVector(stream);
     }
 
-    public static TLIntVector readTLIntVector(InputStream stream) throws IOException {
-        TLIntVector res = new TLIntVector();
-        res.deserialize(stream, null);
-        return res;
+    public static TLIntVector readTLIntVector(InputStream stream, TLContext context) throws IOException {
+        return context.deserializeIntVector(stream);
     }
 
-    public static TLLongVector readTLLongVector(InputStream stream) throws IOException {
-        TLLongVector res = new TLLongVector();
-        res.deserialize(stream, null);
-        return res;
+    public static TLLongVector readTLLongVector(InputStream stream, TLContext context) throws IOException {
+        return context.deserializeLongVector(stream);
     }
 
     public static boolean readTLBool(InputStream stream) throws IOException {
@@ -219,6 +213,6 @@ public class StreamingUtils {
         } else if (v == BOOL_FALSE) {
             return false;
         } else
-            throw new IOException("Not bool value: " + Integer.toHexString(v));
+            throw new DeserializeException("Not bool value: " + Integer.toHexString(v));
     }
 }
