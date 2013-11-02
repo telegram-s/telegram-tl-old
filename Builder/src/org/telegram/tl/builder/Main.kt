@@ -39,7 +39,7 @@ fun main(args: Array<String>) {
         inputDefinition = args.get(1)
     }
 
-    var destFolder = File(inputDefinition!!).directory.canonicalPath + "/out"
+    var destFolder = File(inputDefinition!!).getAbsoluteFile().getParent() + "/out"
 
     if (args.size == 4) {
         if (args.get(2) != "-out" && args.get(2) != "-package") {
