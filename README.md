@@ -1,4 +1,4 @@
-Telegram Tl Java Library
+Telegram TL Java Library
 ===========
 
 TL-Library and TL-Builder for working with TL in java wint telegram.org project.
