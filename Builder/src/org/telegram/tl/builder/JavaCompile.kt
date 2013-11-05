@@ -50,7 +50,7 @@ fun exec(command: String, workingFolder: String)
 }
 
 fun compileClasses(srcFolder: String, workingFolder: String, destFolder: String) {
-    var args = "-classpath " + File(".").getAbsoluteFile() + "/tl-core.jar -d " + destFolder + " ";
+    var args = "-g:vars -classpath " + File(".").getAbsoluteFile() + "/tl-core.jar -d " + destFolder + " ";
 
     var files = File(srcFolder).recursiveFind {(x) -> x.extension == "java" };
 
