@@ -64,11 +64,11 @@ fun compileClasses(srcFolder: String, workingFolder: String, destFolder: String)
 
 fun buildJar(classesFolder: String, jarName: String, workingFolder: String) {
     var args = "";
-    var files = File(classesFolder).recursiveFind {(x) -> x.extension == "class" };
+    var files = File(workingFolder + "/" + classesFolder).recursiveFind {(x) -> x.extension == "class" };
 
     for(f in files) {
-        args += f.getAbsolutePath().substring(workingFolder.size + 1) + " ";
+        args += f.getAbsolutePath().substring((workingFolder + "/" + classesFolder + "/").size) + " ";
     }
 
-    exec("jar cf " + jarName + " " + args, workingFolder)
+    exec("jar cf ../" + jarName + " " + args, workingFolder + "/" + classesFolder + "/")
 }

@@ -78,7 +78,7 @@ fun main(args: Array<String>) {
     println("Compiling classes...")
     compileClasses(destFolder + "/src/", destFolder, "bin");
     println("Building jar...")
-    buildJar(destFolder + "/bin/", "tl-api.jar", destFolder)
+    buildJar("bin", "tl-api.jar", destFolder)
     println("Operation completed successfuly")
     println("[Sources]")
     println("\t" + destFolder + "/src/")

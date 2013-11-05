@@ -38,6 +38,10 @@ public abstract class TLContext {
         registeredClasses.put(clazzId, tClass);
     }
 
+    public TLObject deserializeMessage(byte[] data) throws IOException {
+        return deserializeMessage(new ByteArrayInputStream(data));
+    }
+
     public TLObject deserializeMessage(int clazzId, InputStream stream) throws IOException {
         if (clazzId == TLGzipObject.CLASS_ID) {
             TLGzipObject obj = new TLGzipObject();
@@ -48,9 +52,16 @@ public abstract class TLContext {
         }
 
         try {
-            TLObject message = (TLObject) registeredClasses.get(clazzId).getConstructor().newInstance();
-            message.deserializeBody(stream, this);
-            return message;
+            Class messageClass = registeredClasses.get(clazzId);
+            if (messageClass != null) {
+                TLObject message = (TLObject) messageClass.getConstructor().newInstance();
+                message.deserializeBody(stream, this);
+                return message;
+            } else {
+                throw new DeserializeException("Unsupported class: #" + Integer.toHexString(clazzId));
+            }
+        } catch (DeserializeException e) {
+            throw e;
         } catch (Exception e) {
             e.printStackTrace();
             throw new IOException("Unable to deserialize data");
