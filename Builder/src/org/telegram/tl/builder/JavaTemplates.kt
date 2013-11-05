@@ -274,5 +274,8 @@ var JavaDeserializeVector = """
 var JavaDeserializeIntVector = """
         this.{int} = readTLIntVector(stream, context);"""
 
+var JavaDeserializeStringVector = """
+        this.{int} = readTLStringVector(stream, context);"""
+
 var JavaDeserializeLongVector = """
         this.{int} = readTLLongVector(stream, context);"""

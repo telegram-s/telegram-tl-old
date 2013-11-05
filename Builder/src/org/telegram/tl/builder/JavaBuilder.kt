@@ -167,6 +167,10 @@ fun buildDeserializer(parameters: List<JavaParameter>): String
                 {
                     serializer += JavaDeserializeLongVector.replace("{int}", p.internalName);
                 }
+                else if (intReference.javaName == "String")
+                {
+                    serializer += JavaDeserializeStringVector.replace("{int}", p.internalName);
+                }
                 else {
                     serializer += JavaDeserializeVector.replace("{int}", p.internalName);
                 }
@@ -389,11 +393,15 @@ fun writeJavaClasses(model: JavaModel, path: String)
     for(m in model.methods)
     {
         var generatedFile = JavaMethodTemplate;
+        var returnTypeName = m.returnReference!!.javaName;
+        if (returnTypeName == "boolean") {
+            returnTypeName = "org.telegram.tl.TLBool"
+        }
         generatedFile = generatedFile
                 .replace("{name}", m.requestClassName)
                 .replace("{package}", JavaPackage + "." + JavaMethodPackage)
                 .replace("{class_id}", "0x" + Integer.toHexString(m.tlMethod.id))
-                .replace("{return_type}", m.returnReference!!.javaName);
+                .replace("{return_type}", returnTypeName);
 
         var fields = "";
         for(p in m.parameters)
@@ -452,7 +460,7 @@ fun writeJavaClasses(model: JavaModel, path: String)
 
 
         var responseParser = JavaMethodParserTemplate.replace("{return_type}",
-                m.returnReference!!.javaName);
+                returnTypeName);
         if (m.returnReference is JavaTypeVectorReference) {
             var vectorReference = m.returnReference as JavaTypeVectorReference;
             if (vectorReference.internalReference is JavaTypeBuiltInReference) {
@@ -478,8 +486,15 @@ fun writeJavaClasses(model: JavaModel, path: String)
             var returnReference = m.returnReference as JavaTypeTlReference;
             responseParser = responseParser.replace("{body}",
                     JavaMethodParserBodyGeneral.replace("{return_type}", returnReference.javaName))
-        } else {
-
+        } else if (m.returnReference is JavaTypeBuiltInReference) {
+            var returnReference = m.returnReference as JavaTypeBuiltInReference;
+            if (returnReference.javaName != "boolean") {
+                throw RuntimeException("Only boolean built-in reference allowed as return")
+            }
+            responseParser = responseParser.replace("{body}",
+                    JavaMethodParserBodyGeneral.replace("{return_type}", "org.telegram.tl.TLBool"))
+        }
+        else {
             var functionalParameter: JavaParameter? = null
             for(p in m.parameters)
             {
@@ -490,7 +505,7 @@ fun writeJavaClasses(model: JavaModel, path: String)
             }
 
             if (functionalParameter == null) {
-                throw RuntimeException("Any reference without functional reference")
+                throw RuntimeException("Any reference without functional reference: " + m.methodName)
             }
 
             // throw RuntimeException("Unsupported return reference")
@@ -524,7 +539,13 @@ fun writeJavaClasses(model: JavaModel, path: String)
             args += p.reference!!.javaName + " " + p.internalName;
         }
 
-        requests += JavaRequesterMethod.replace("{return_type}", m.returnReference!!.javaName)
+        var returnTypeName = m.returnReference!!.javaName;
+        if (returnTypeName == "boolean")
+        {
+            returnTypeName = "TLBool";
+        }
+
+        requests += JavaRequesterMethod.replace("{return_type}", returnTypeName)
                 .replace("{method_name}", m.methodName)
                 .replace("{method_class}", m.requestClassName)
                 .replace("{args}", args)

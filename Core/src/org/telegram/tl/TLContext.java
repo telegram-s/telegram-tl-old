@@ -51,6 +51,14 @@ public abstract class TLContext {
             return deserializeMessage(innerClazzId, gzipInputStream);
         }
 
+        if (clazzId == TLBoolTrue.CLASS_ID) {
+            return new TLBoolTrue();
+        }
+
+        if (clazzId == TLBoolFalse.CLASS_ID) {
+            return new TLBoolFalse();
+        }
+
         try {
             Class messageClass = registeredClasses.get(clazzId);
             if (messageClass != null) {
@@ -116,6 +124,22 @@ public abstract class TLContext {
             obj.deserialize(stream, this);
             GZIPInputStream gzipInputStream = new GZIPInputStream(new ByteArrayInputStream(obj.getPackedData()));
             return deserializeLongVector(gzipInputStream);
+        } else {
+            throw new IOException("Unable to deserialize vector");
+        }
+    }
+
+    public TLStringVector deserializeStringVector(InputStream stream) throws IOException {
+        int clazzId = StreamingUtils.readInt(stream);
+        if (clazzId == TLVector.CLASS_ID) {
+            TLStringVector res = new TLStringVector();
+            res.deserializeBody(stream, this);
+            return res;
+        } else if (clazzId == TLGzipObject.CLASS_ID) {
+            TLGzipObject obj = new TLGzipObject();
+            obj.deserialize(stream, this);
+            GZIPInputStream gzipInputStream = new GZIPInputStream(new ByteArrayInputStream(obj.getPackedData()));
+            return deserializeStringVector(gzipInputStream);
         } else {
             throw new IOException("Unable to deserialize vector");
         }

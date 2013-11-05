@@ -78,6 +78,7 @@ JavaTypeReference(tlReference,
                 {
                     "int" -> JavaCorePackage + ".TLIntVector"
                     "long" -> JavaCorePackage + ".TLLongVector"
+                    "String" -> JavaCorePackage + ".TLStringVector"
                     else -> throw RuntimeException("Unsupported built in reference in vector: " + internalReference.javaName)
                 }
             }

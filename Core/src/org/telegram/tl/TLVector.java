@@ -32,7 +32,7 @@ public class TLVector<T> extends TLObject implements List<T> {
     public void setDestClass(Class destClass) {
         if (destClass == null) {
             throw new RuntimeException("DestClass could not be null");
-        } else if (destClass != Integer.class && destClass != Long.class && !TLObject.class.isAssignableFrom(destClass)) {
+        } else if (destClass != Integer.class && destClass != Long.class && destClass != String.class && !TLObject.class.isAssignableFrom(destClass)) {
             throw new RuntimeException("Unsupported DestClass");
         }
         this.destClass = destClass;
@@ -48,6 +48,10 @@ public class TLVector<T> extends TLObject implements List<T> {
         } else if (destClass == Long.class) {
             for (T i : items) {
                 writeLong((Long) i, stream);
+            }
+        } else if (destClass == String.class) {
+            for (T i : items) {
+                writeTLString((String) i, stream);
             }
         } else {
             for (T i : items) {
@@ -67,6 +71,8 @@ public class TLVector<T> extends TLObject implements List<T> {
                 items.add((T) (Integer) readInt(stream));
             } else if (destClass == Long.class) {
                 items.add((T) (Long) readLong(stream));
+            } else if (destClass == String.class) {
+                items.add((T) readTLString(stream));
             } else {
                 items.add((T) context.deserializeMessage(stream));
             }

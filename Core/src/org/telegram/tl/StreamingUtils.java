@@ -11,9 +11,6 @@ import java.io.OutputStream;
  * Time: 15:53
  */
 public class StreamingUtils {
-    private static final int BOOL_FALSE = 0xbc799737;
-    private static final int BOOL_TRUE = 0x997275b5;
-
     public static void writeByte(int v, OutputStream stream) throws IOException {
         stream.write(v);
     }
@@ -51,9 +48,9 @@ public class StreamingUtils {
 
     public static void writeTLBool(boolean v, OutputStream stream) throws IOException {
         if (v) {
-            writeInt(BOOL_TRUE, stream);
+            writeInt(TLBoolTrue.CLASS_ID, stream);
         } else {
-            writeInt(BOOL_FALSE, stream);
+            writeInt(TLBoolFalse.CLASS_ID, stream);
         }
     }
 
@@ -206,11 +203,15 @@ public class StreamingUtils {
         return context.deserializeLongVector(stream);
     }
 
+    public static TLStringVector readTLStringVector(InputStream stream, TLContext context) throws IOException {
+        return context.deserializeStringVector(stream);
+    }
+
     public static boolean readTLBool(InputStream stream) throws IOException {
         int v = readInt(stream);
-        if (v == BOOL_TRUE) {
+        if (v == TLBoolTrue.CLASS_ID) {
             return true;
-        } else if (v == BOOL_FALSE) {
+        } else if (v == TLBoolFalse.CLASS_ID) {
             return false;
         } else
             throw new DeserializeException("Not bool value: " + Integer.toHexString(v));

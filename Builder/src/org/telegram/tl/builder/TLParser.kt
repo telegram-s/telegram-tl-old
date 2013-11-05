@@ -72,10 +72,6 @@ fun buildFromJson(root: JsonNode): TLDefinition
 
         var rawType = i.get("type")!!.textValue().toString()
 
-        if (IgnoredTypes.any {(x) -> rawType == x }){
-            continue
-        }
-
         var tlType = createTypeFromName(rawType);
 
         var constructorParameters = ArrayList<TLParameter>()
