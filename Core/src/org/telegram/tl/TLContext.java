@@ -45,7 +45,7 @@ public abstract class TLContext {
     public TLObject deserializeMessage(int clazzId, InputStream stream) throws IOException {
         if (clazzId == TLGzipObject.CLASS_ID) {
             TLGzipObject obj = new TLGzipObject();
-            obj.deserialize(stream, this);
+            obj.deserializeBody(stream, this);
             GZIPInputStream gzipInputStream = new GZIPInputStream(new ByteArrayInputStream(obj.getPackedData()));
             int innerClazzId = StreamingUtils.readInt(gzipInputStream);
             return deserializeMessage(innerClazzId, gzipInputStream);
@@ -89,7 +89,7 @@ public abstract class TLContext {
             return res;
         } else if (clazzId == TLGzipObject.CLASS_ID) {
             TLGzipObject obj = new TLGzipObject();
-            obj.deserialize(stream, this);
+            obj.deserializeBody(stream, this);
             GZIPInputStream gzipInputStream = new GZIPInputStream(new ByteArrayInputStream(obj.getPackedData()));
             return deserializeVector(gzipInputStream);
         } else {
@@ -105,7 +105,7 @@ public abstract class TLContext {
             return res;
         } else if (clazzId == TLGzipObject.CLASS_ID) {
             TLGzipObject obj = new TLGzipObject();
-            obj.deserialize(stream, this);
+            obj.deserializeBody(stream, this);
             GZIPInputStream gzipInputStream = new GZIPInputStream(new ByteArrayInputStream(obj.getPackedData()));
             return deserializeIntVector(gzipInputStream);
         } else {
@@ -121,7 +121,7 @@ public abstract class TLContext {
             return res;
         } else if (clazzId == TLGzipObject.CLASS_ID) {
             TLGzipObject obj = new TLGzipObject();
-            obj.deserialize(stream, this);
+            obj.deserializeBody(stream, this);
             GZIPInputStream gzipInputStream = new GZIPInputStream(new ByteArrayInputStream(obj.getPackedData()));
             return deserializeLongVector(gzipInputStream);
         } else {
@@ -137,7 +137,7 @@ public abstract class TLContext {
             return res;
         } else if (clazzId == TLGzipObject.CLASS_ID) {
             TLGzipObject obj = new TLGzipObject();
-            obj.deserialize(stream, this);
+            obj.deserializeBody(stream, this);
             GZIPInputStream gzipInputStream = new GZIPInputStream(new ByteArrayInputStream(obj.getPackedData()));
             return deserializeStringVector(gzipInputStream);
         } else {

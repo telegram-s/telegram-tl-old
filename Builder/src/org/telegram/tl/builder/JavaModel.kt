@@ -33,7 +33,8 @@ class JavaTypeObject(var tlType: TLCombinedTypeDef)
                     var hasParameter = false
                     for (cP in constr.parameters)
                     {
-                        if (cP.tlParameterDef.name == pName && cP.tlParameterDef.typeDef == pType)
+                        var areSameType = cP.tlParameterDef.typeDef == pType;
+                        if (cP.tlParameterDef.name == pName && areSameType)
                         {
                             hasParameter = true;
                             break;

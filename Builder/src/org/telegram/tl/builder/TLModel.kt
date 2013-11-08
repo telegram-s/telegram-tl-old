@@ -83,7 +83,7 @@ class TLBuiltInGenericTypeDef(name: String, var basic: TLTypeDef) : TLTypeDef(na
     {
         if (other is TLBuiltInGenericTypeDef)
         {
-            return (name == other.name) && (basic.name == other.name);
+            return (name == other.name) && (basic.name == other.basic.name);
         }
         return false;
     }

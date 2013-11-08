@@ -216,4 +216,45 @@ public class StreamingUtils {
         } else
             throw new DeserializeException("Not bool value: " + Integer.toHexString(v));
     }
+
+    public static byte[] intToBytes(int value) {
+        return new byte[]{
+                (byte) (value & 0xFF),
+                (byte) ((value >> 8) & 0xFF),
+                (byte) ((value >> 16) & 0xFF),
+                (byte) ((value >> 24) & 0xFF)};
+    }
+
+    public static int readInt(byte[] src) {
+        return readInt(src, 0);
+    }
+
+    public static int readInt(byte[] src, int offset) {
+        int a = src[offset + 0] & 0xFF;
+        int b = src[offset + 1] & 0xFF;
+        int c = src[offset + 2] & 0xFF;
+        int d = src[offset + 3] & 0xFF;
+
+        return a + (b << 8) + (c << 16) + (d << 24);
+    }
+
+    public static long readUInt(byte[] src) {
+        return readUInt(src, 0);
+    }
+
+    public static long readUInt(byte[] src, int offset) {
+        int a = src[offset + 0] & 0xFF;
+        int b = src[offset + 1] & 0xFF;
+        int c = src[offset + 2] & 0xFF;
+        int d = src[offset + 3] & 0xFF;
+
+        return a + (b << 8) + (c << 16) + (d << 24);
+    }
+
+    public static long readLong(byte[] src, int offset) {
+        long a = readUInt(src, offset);
+        long b = readUInt(src, offset + 4);
+
+        return a + (b << 32);
+    }
 }

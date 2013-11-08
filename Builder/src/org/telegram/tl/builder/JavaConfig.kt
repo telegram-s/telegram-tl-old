@@ -45,7 +45,7 @@ fun mapJavaTypeName(typedef: TLCombinedTypeDef): String {
 }
 
 fun mapJavaChildName(constructor: TLConstructorDef): String {
-    return JavaClassPrefix + constructor.name.uCamelCase()
+    return JavaClassPrefix + constructor.name.skipNamespace().uCamelCase()
 }
 
 fun mapVariableBaseName(parameter: TLParameterDef): String

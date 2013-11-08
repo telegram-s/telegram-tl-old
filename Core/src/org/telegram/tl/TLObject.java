@@ -1,9 +1,6 @@
 package org.telegram.tl;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.util.HashMap;
 
 import static org.telegram.tl.StreamingUtils.*;
@@ -14,7 +11,7 @@ import static org.telegram.tl.StreamingUtils.*;
  * Date: 25.10.13
  * Time: 15:41
  */
-public abstract class TLObject {
+public abstract class TLObject implements Serializable {
 
     public abstract int getClassId();
 
