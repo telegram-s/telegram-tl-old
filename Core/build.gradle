@@ -1,0 +1,9 @@
+def basicVersion = '1.0'
+
+if (project.hasProperty('buildIndex')) {
+     project.version = basicVersion + '.' + project.buildIndex
+} else {
+     project.version = basicVersion + '.debug'
+}
+
+apply plugin: 'java'
