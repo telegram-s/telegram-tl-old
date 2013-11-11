@@ -35,6 +35,7 @@ public class {name} extends TLObject {
 {getter-setters}
 {serialize}
 {deserialize}
+{to_string}
 }
 """
 
@@ -104,6 +105,8 @@ public class {name} extends TLMethod<{return_type}> {
 {getter-setters}
 {serialize}
 {deserialize}
+
+{to_string}
 }
 """
 
@@ -178,7 +181,16 @@ public class {name} extends {base-name} {
 {getter-setters}
 {serialize}
 {deserialize}
+
+{to_string}
 }
+"""
+
+var JavaToStringTemplate = """
+    @Override
+    public String toString() {
+        return "{value}";
+    }
 """
 
 var JavaFieldTemplate = """

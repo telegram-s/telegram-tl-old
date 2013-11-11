@@ -225,7 +225,9 @@ fun writeJavaClasses(model: JavaModel, path: String)
             generatedFile = generatedFile
                     .replace("{name}", t.javaTypeName)
                     .replace("{package}", t.javaPackage)
-                    .replace("{class_id}", "0x" + Integer.toHexString(t.constructors.first!!.tlConstructor.id));;
+                    .replace("{class_id}", "0x" + Integer.toHexString(t.constructors.first!!.tlConstructor.id))
+                    .replace("{to_string}",
+                    JavaToStringTemplate.replace("{value}", t.constructors.first!!.tlConstructor.name + "#" + Integer.toHexString(t.constructors.first!!.tlConstructor.id)));
 
             var fields = "";
             for(p in t.constructors.get(0).parameters)
@@ -323,7 +325,9 @@ fun writeJavaClasses(model: JavaModel, path: String)
                         .replace("{name}", constr.javaClassName)
                         .replace("{base-name}", t.javaTypeName)
                         .replace("{package}", t.javaPackage)
-                        .replace("{class_id}", "0x" + Integer.toHexString(constr.tlConstructor.id));;
+                        .replace("{class_id}", "0x" + Integer.toHexString(constr.tlConstructor.id))
+                        .replace("{to_string}",
+                        JavaToStringTemplate.replace("{value}", constr.tlConstructor.name + "#" + Integer.toHexString(constr.tlConstructor.id)));
                 var fields = "";
                 for(p in constr.parameters)
                 {
@@ -401,7 +405,9 @@ fun writeJavaClasses(model: JavaModel, path: String)
                 .replace("{name}", m.requestClassName)
                 .replace("{package}", JavaPackage + "." + JavaMethodPackage)
                 .replace("{class_id}", "0x" + Integer.toHexString(m.tlMethod.id))
-                .replace("{return_type}", returnTypeName);
+                .replace("{return_type}", returnTypeName)
+                .replace("{to_string}",
+                JavaToStringTemplate.replace("{value}", m.tlMethod.name + "#" + Integer.toHexString(m.tlMethod.id)));
 
         var fields = "";
         for(p in m.parameters)
