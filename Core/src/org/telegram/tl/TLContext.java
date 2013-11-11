@@ -23,6 +23,14 @@ public abstract class TLContext {
 
     }
 
+    public boolean isSupportedObject(TLObject object) {
+        return isSupportedObject(object.getClassId());
+    }
+
+    public boolean isSupportedObject(int classId) {
+        return registeredClasses.containsKey(classId);
+    }
+
     public <T extends TLObject> void registerClass(Class<T> tClass) {
         try {
             int classId = tClass.getField("CLASS_ID").getInt(null);
