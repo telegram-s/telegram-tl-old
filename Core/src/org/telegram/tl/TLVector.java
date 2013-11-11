@@ -195,4 +195,9 @@ public class TLVector<T> extends TLObject implements List<T> {
     public List<T> subList(int i, int i2) {
         return items.subList(i, i2);
     }
+
+    @Override
+    public String toString() {
+        return "vector#1cb5c415";
+    }
 }

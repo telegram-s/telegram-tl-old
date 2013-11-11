@@ -48,4 +48,9 @@ public class TLGzipObject extends TLObject {
     public void deserializeBody(InputStream stream, TLContext context) throws IOException {
         packedData = readTLBytes(stream);
     }
+
+    @Override
+    public String toString() {
+        return "gzip_packed#3072cfa1";
+    }
 }
