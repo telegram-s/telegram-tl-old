@@ -1,62 +1,47 @@
-Telegram TL Java Library
+Java Telegram TL Compiler
 ===========
 
-TL-Library and TL-Builder for working with TL in java wint telegram.org project.
+Type Language compiler for working with api of telegram.org project.
 
-More information about TL: http://core.telegram.org/mtproto/TL
+Converts json-representation of TL-scheme to jar with generated classes for serializing and deserializing api messages and methods.
 
-tl-core is basic library to support parsing and serializing of TL classes
+Usage
+----------
+Download latest version at [releases page](https://github.com/ex3ndr/telegram-tl/releases)
 
-tl-builder is utility for converting json-representation of TL to Java library
+Write in console:
+```java -jar tl-builder.jar -in <path_to_definition> [-out <dest_folder>] [-package <package>]```
+* ```<path_to_definition>``` - path to json file
+* ```<dest_folder>``` - destination folder for java-files and destination jar file
+* ```<package>``` - overriding java package name. Default: org.telegram.api
 
-Licence: MIT
-
-Prebuild library
-===========
-You always can download prebuilded jars and source classes for every level of api.
-Latest release: https://github.com/ex3ndr/telegram-tl/releases/tag/0.1
-
-Actual api levels
+Generating api library
 -----------
-### Api Level #1
-Jar:
-https://github.com/ex3ndr/telegram-tl/releases/download/0.1/tl-api-1.jar
+1. Download latest release version of tl-core library at [tl-core releases page](https://github.com/ex3ndr/telegram-tl-core/releases), rename jar file to "tl-core.jar" and put to working folder.
+2. Get json-cheme of required api-level at http://core.telegram.org/schema and put it to same working folder.
+3. Run tl-builder on this files
+4. Add compiled tl-api.jar to your project
 
-Source:
-https://github.com/ex3ndr/telegram-tl/releases/download/0.1/tl-api-1.src.zip
+Prebuilded api libraries
+-----------
+You always could get actual versions of tl-api jars at [releases page](https://github.com/ex3ndr/telegram-tl/releases)
 
-### Api Level #7
-Jar:
-https://github.com/ex3ndr/telegram-tl/releases/download/0.1/tl-api-7.jar
+More information
+----------------
+#### Type Language documentation
 
-Source:
-https://github.com/ex3ndr/telegram-tl/releases/download/0.1/tl-api-7.src.zip
+English: http://core.telegram.org/mtproto/TL
 
-### Api Level #8
-Jar:
-https://github.com/ex3ndr/telegram-tl/releases/download/0.1/tl-api-8.jar
+Russian: http://dev.stel.com/mtproto/TL
 
-Source:
-https://github.com/ex3ndr/telegram-tl/releases/download/0.1/tl-api-8.src.zip
+####Telegraph project
 
-### Api Level #9
-Jar:
-https://github.com/ex3ndr/telegram-tl/releases/download/0.1/tl-api-9.jar
+http://telegram.org/
 
-Source:
-https://github.com/ex3ndr/telegram-tl/releases/download/0.1/tl-api-9.src.zip
+#### Android Client that uses this library
 
-Usage of toolkit
-===========
-1) Get latest version of tl-builder and tl-core library at download section.
+[![Telegram S](https://developer.android.com/images/brand/en_generic_rgb_wo_45.png)](https://play.google.com/store/apps/details?id=org.telegram.android "Telegram S")
 
-2) Get json-cheme of required api-level at http://core.telegram.org/schema
-
-3) Run tl-builder:
-```
-java -jar tl-builder.jar -in <path_to_definition> [-out <dest_folder>] [-package <package>]
-<path_to_definition> - path to json file
-<dest_folder> - destination folder for java-files and destination jar file
-<package> - overriding java package name. Default: org.telegram.api
-````
-4) Add to your project generated tl-api.jar and tl-core.jar
+Licence
+----------------
+Compiler uses [MIT Licence](LICENCE)
