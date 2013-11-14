@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/tl-builder.iml" filepath="$PROJECT_DIR$/tl-builder.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../core/tl-core.iml" filepath="$PROJECT_DIR$/../core/tl-core.iml" />
     </modules>
   </component>
 </project>

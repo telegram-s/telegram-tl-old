@@ -22,7 +22,7 @@ fun printUsage()
 }
 
 fun main(args: Array<String>) {
-    println("TL Compiler by Stepan Korshakov, Telegraph LLC (c) 2013 v0.1")
+    println("TL Compiler by Stepan Korshakov, Telegraph LLC (c) 2013 v1.0")
 
     var inputDefinition: String?
 
