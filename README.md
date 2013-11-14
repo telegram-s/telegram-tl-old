@@ -1,9 +1,9 @@
 Java Telegram TL Compiler
 ===========
 
-Type Language compiler for working with api of telegram.org project.
+[Type Language](http://core.telegram.org/mtproto/TL) compiler for working with api of [Telegram](http://telegram.org) project.
 
-Converts json-representation of TL-scheme to jar with generated classes for serializing and deserializing api messages and methods.
+Converts json-representation of [TL-scheme](http://core.telegram.org/schema) to jar with generated classes for serializing and deserializing api messages and methods.
 
 Usage
 ----------
