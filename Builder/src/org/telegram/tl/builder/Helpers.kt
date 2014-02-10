@@ -32,7 +32,7 @@ fun String.getNamespace(): String
     {
         this.substring(0, this.indexOf("."))
     }
-    else{
+    else {
         ""
     }
 }
@@ -43,7 +43,7 @@ fun String.skipNamespace(): String
     {
         this.substring(this.indexOf(".") + 1)
     }
-    else{
+    else {
         this
     }
 }
@@ -62,15 +62,15 @@ private fun divideByWords(value: String): List<String>
 
     @outer while (workingValue != "")
     {
-        for(index in 0..(workingValue.length - 1)){
-            for(div in dividers){
+        for (index in 0..(workingValue.length - 1)) {
+            for (div in dividers) {
                 try{
-                    if (workingValue[index] == div){
-                        if (index > 0){
+                    if (workingValue[index] == div) {
+                        if (index > 0) {
                             words.add(workingValue.substring(0, index));
                             workingValue = workingValue.substring(index + 1)
                         }
-                        else{
+                        else {
                             workingValue = workingValue.substring(1)
                         }
 
@@ -82,8 +82,8 @@ private fun divideByWords(value: String): List<String>
                 }
             }
 
-            if (index > 0){
-                if (workingValue[index - 1].isLowerCase() && workingValue[index].isUpperCase()){
+            if (index > 0) {
+                if (workingValue[index - 1].isLowerCase() && workingValue[index].isUpperCase()) {
                     words.add(workingValue.substring(0, index));
                     workingValue = workingValue.substring(index)
 
@@ -92,7 +92,7 @@ private fun divideByWords(value: String): List<String>
             }
         }
 
-        if (workingValue != ""){
+        if (workingValue != "") {
             words.add(workingValue);
             workingValue = "";
         }

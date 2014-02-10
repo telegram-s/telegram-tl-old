@@ -31,7 +31,7 @@ fun main(args: Array<String>) {
         return
     }
 
-    if (args.get(0) != "-in"){
+    if (args.get(0) != "-in") {
         printUsage()
         return
     }

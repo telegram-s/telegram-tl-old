@@ -16,7 +16,7 @@ fun convertToJavaModel(model: TLModel): JavaModel
 {
     var javaTypes = HashMap<String, JavaTypeObject>()
 
-    for(t in model.types)
+    for (t in model.types)
     {
         if (t is TLCombinedTypeDef)
         {
@@ -27,26 +27,26 @@ fun convertToJavaModel(model: TLModel): JavaModel
 
     var javaMethods = ArrayList<JavaRpcMethod>()
 
-    for(t in model.methods){
+    for (t in model.methods) {
         javaMethods.add(JavaRpcMethod(t))
     }
 
-    for(t in javaTypes.values())
+    for (t in javaTypes.values())
     {
-        for(p in t.commonParameters)
+        for (p in t.commonParameters)
         {
             p.reference = mapReference(javaTypes, p.tlParameterDef.typeDef)
         }
-        for(c in t.constructors)
+        for (c in t.constructors)
         {
-            for(p in c.parameters)
+            for (p in c.parameters)
             {
                 p.reference = mapReference(javaTypes, p.tlParameterDef.typeDef)
             }
         }
     }
 
-    for(m in javaMethods)
+    for (m in javaMethods)
     {
         m.returnReference = mapReference(javaTypes, m.tlMethod.returnType)
 
@@ -79,13 +79,13 @@ fun mapReference(javaTypes: HashMap<String, JavaTypeObject>, tlType: TLTypeDef):
     {
         JavaTypeBuiltInReference(tlType)
     }
-    else if (tlType is TLAnyTypeDef){
+    else if (tlType is TLAnyTypeDef) {
         JavaTypeAnyReference(tlType)
     }
     else if (tlType is TLFunctionalTypeDef) {
         JavaTypeFunctionalReference(tlType)
     }
-    else{
+    else {
         JavaTypeUnknownReference(tlType)
     }
 }
@@ -97,7 +97,7 @@ fun buildSerializer(parameters: List<JavaParameter>): String
         return ""
     }
     var serializer = "";
-    for(p in parameters)
+    for (p in parameters)
     {
         if (p.reference is JavaTypeTlReference)
         {
@@ -148,7 +148,7 @@ fun buildDeserializer(parameters: List<JavaParameter>): String
         return ""
     }
     var serializer = "";
-    for(p in parameters)
+    for (p in parameters)
     {
         if (p.reference is JavaTypeTlReference)
         {
@@ -175,7 +175,7 @@ fun buildDeserializer(parameters: List<JavaParameter>): String
                     serializer += JavaDeserializeVector.replace("{int}", p.internalName);
                 }
             }
-            else{
+            else {
                 serializer += JavaDeserializeVector.replace("{int}", p.internalName);
             }
         } else if (p.reference is JavaTypeBuiltInReference)
@@ -198,7 +198,7 @@ fun buildDeserializer(parameters: List<JavaParameter>): String
             } else if (p.tlParameterDef.typeDef.name == "bytes")
             {
                 serializer += JavaDeserializeBytes.replace("{int}", p.internalName);
-            }else throw RuntimeException("Unknown internal type: " + p.tlParameterDef.typeDef.name)
+            } else throw RuntimeException("Unknown internal type: " + p.tlParameterDef.typeDef.name)
         }
         else if (p.reference is JavaTypeFunctionalReference) {
             serializer += JavaDeserializeFunctional.replace("{int}", p.internalName);
@@ -218,7 +218,7 @@ fun buildDeserializer(parameters: List<JavaParameter>): String
 
 fun writeJavaClasses(model: JavaModel, path: String)
 {
-    for(t in model.types.values()) {
+    for (t in model.types.values()) {
         if (t.constructors.size == 1 && !IgnoreUniting.any {(x) -> x == t.tlType.name })
         {
             var generatedFile = JavaClassTemplate;
@@ -230,7 +230,7 @@ fun writeJavaClasses(model: JavaModel, path: String)
                     JavaToStringTemplate.replace("{value}", t.constructors.first!!.tlConstructor.name + "#" + Integer.toHexString(t.constructors.first!!.tlConstructor.id)));
 
             var fields = "";
-            for(p in t.constructors.get(0).parameters)
+            for (p in t.constructors.get(0).parameters)
             {
                 fields += JavaFieldTemplate
                         .replace("{type}", p.reference!!.javaName)
@@ -239,7 +239,7 @@ fun writeJavaClasses(model: JavaModel, path: String)
             generatedFile = generatedFile.replace("{fields}", fields)
 
             var getterSetter = "";
-            for(p in t.constructors.get(0).parameters)
+            for (p in t.constructors.get(0).parameters)
             {
                 getterSetter += JavaGetterSetterTemplate
                         .replace("{type}", p.reference!!.javaName)
@@ -252,9 +252,9 @@ fun writeJavaClasses(model: JavaModel, path: String)
             {
                 var constructorArgs = "";
                 var constructorBody = "";
-                for(p in t.constructors.get(0).parameters)
+                for (p in t.constructors.get(0).parameters)
                 {
-                    if (constructorArgs != ""){
+                    if (constructorArgs != "") {
                         constructorArgs += ", ";
                     }
 
@@ -272,7 +272,7 @@ fun writeJavaClasses(model: JavaModel, path: String)
                                 .replace("{args}", constructorArgs)
                                 .replace("{body}", constructorBody))
             }
-            else{
+            else {
                 generatedFile = generatedFile.replace("{constructor}", "")
             }
 
@@ -293,7 +293,7 @@ fun writeJavaClasses(model: JavaModel, path: String)
                         .replace("{name}", t.javaTypeName)
                         .replace("{package}", t.javaPackage);
                 var fields = "";
-                for(p in t.commonParameters)
+                for (p in t.commonParameters)
                 {
                     fields += JavaFieldTemplate
                             .replace("{type}", p.reference!!.javaName)
@@ -302,7 +302,7 @@ fun writeJavaClasses(model: JavaModel, path: String)
                 generatedFile = generatedFile.replace("{fields}", fields)
 
                 var getterSetter = "";
-                for(p in t.commonParameters)
+                for (p in t.commonParameters)
                 {
                     getterSetter += JavaGetterSetterTemplate
                             .replace("{type}", p.reference!!.javaName)
@@ -318,7 +318,7 @@ fun writeJavaClasses(model: JavaModel, path: String)
                 destFile.writeText(generatedFile, "utf-8")
             }
 
-            for(constr in t.constructors)
+            for (constr in t.constructors)
             {
                 var generatedFile = JavaChildClassTemplate;
                 generatedFile = generatedFile
@@ -329,7 +329,7 @@ fun writeJavaClasses(model: JavaModel, path: String)
                         .replace("{to_string}",
                         JavaToStringTemplate.replace("{value}", constr.tlConstructor.name + "#" + Integer.toHexString(constr.tlConstructor.id)));
                 var fields = "";
-                for(p in constr.parameters)
+                for (p in constr.parameters)
                 {
                     if (t.commonParameters.any {(x) -> x.internalName == p.internalName })
                     {
@@ -342,7 +342,7 @@ fun writeJavaClasses(model: JavaModel, path: String)
                 generatedFile = generatedFile.replace("{fields}", fields)
 
                 var getterSetter = "";
-                for(p in constr.parameters)
+                for (p in constr.parameters)
                 {
                     if (t.commonParameters.any {(x) -> x.internalName == p.internalName })
                     {
@@ -359,9 +359,9 @@ fun writeJavaClasses(model: JavaModel, path: String)
                 {
                     var constructorArgs = "";
                     var constructorBody = "";
-                    for(p in constr.parameters)
+                    for (p in constr.parameters)
                     {
-                        if (constructorArgs != ""){
+                        if (constructorArgs != "") {
                             constructorArgs += ", ";
                         }
 
@@ -394,7 +394,7 @@ fun writeJavaClasses(model: JavaModel, path: String)
         }
     }
 
-    for(m in model.methods)
+    for (m in model.methods)
     {
         var generatedFile = JavaMethodTemplate;
         var returnTypeName = m.returnReference!!.javaName;
@@ -410,7 +410,7 @@ fun writeJavaClasses(model: JavaModel, path: String)
                 JavaToStringTemplate.replace("{value}", m.tlMethod.name + "#" + Integer.toHexString(m.tlMethod.id)));
 
         var fields = "";
-        for(p in m.parameters)
+        for (p in m.parameters)
         {
             fields += JavaFieldTemplate
                     .replace("{type}", p.reference!!.javaName)
@@ -419,7 +419,7 @@ fun writeJavaClasses(model: JavaModel, path: String)
         generatedFile = generatedFile.replace("{fields}", fields)
 
         var getterSetter = "";
-        for(p in m.parameters)
+        for (p in m.parameters)
         {
             getterSetter += JavaGetterSetterTemplate
                     .replace("{type}", p.reference!!.javaName)
@@ -432,9 +432,9 @@ fun writeJavaClasses(model: JavaModel, path: String)
         {
             var constructorArgs = "";
             var constructorBody = "";
-            for(p in m.parameters)
+            for (p in m.parameters)
             {
-                if (constructorArgs != ""){
+                if (constructorArgs != "") {
                     constructorArgs += ", ";
                 }
 
@@ -476,7 +476,7 @@ fun writeJavaClasses(model: JavaModel, path: String)
                 } else if (intReference.javaName == "long") {
                     responseParser = responseParser.replace("{body}", JavaMethodParserBodyLongVector)
                 }
-                else{
+                else {
                     throw RuntimeException("Unsupported vector internal reference")
                 }
             }
@@ -502,7 +502,7 @@ fun writeJavaClasses(model: JavaModel, path: String)
         }
         else {
             var functionalParameter: JavaParameter? = null
-            for(p in m.parameters)
+            for (p in m.parameters)
             {
                 if (p.reference is JavaTypeFunctionalReference) {
                     functionalParameter = p;
@@ -530,11 +530,11 @@ fun writeJavaClasses(model: JavaModel, path: String)
 
     var requests = ""
 
-    for(m in model.methods) {
+    for (m in model.methods) {
 
         var args = "";
         var methodArgs = "";
-        for(p in m.parameters) {
+        for (p in m.parameters) {
             if (args != "") {
                 args += ", ";
             }
@@ -567,15 +567,15 @@ fun writeJavaClasses(model: JavaModel, path: String)
 
 
     var contextInit = ""
-    for(t in model.types.values()) {
+    for (t in model.types.values()) {
         if (t.constructors.size == 1 && !IgnoreUniting.any {(x) -> x == t.tlType.name })
         {
             contextInit += JavaContextIntRecord
                     .replace("{type}", t.javaPackage + "." + t.javaTypeName)
                     .replace("{id}", "0x" + Integer.toHexString(t.constructors.first!!.tlConstructor.id));
         }
-        else{
-            for(c in t.constructors)
+        else {
+            for (c in t.constructors)
             {
                 contextInit += JavaContextIntRecord
                         .replace("{type}", t.javaPackage + "." + c.javaClassName)

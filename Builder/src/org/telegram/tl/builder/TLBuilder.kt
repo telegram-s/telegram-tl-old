@@ -25,16 +25,16 @@ fun checkType(t: TLType)
 
 fun checkType(t: TLType, availableTypes: HashSet<String>)
 {
-    if (t is TLTypeGeneric){
-        if (!availableTypes.contains(t.name)){
+    if (t is TLTypeGeneric) {
+        if (!availableTypes.contains(t.name)) {
             throw RuntimeException("Unknown `" + t.name + "` generic type");
         }
 
-        for(g in t.generics){
+        for (g in t.generics) {
             checkType(g, availableTypes)
         }
-    } else if (t is TLTypeRaw){
-        if (!availableTypes.contains(t.name)){
+    } else if (t is TLTypeRaw) {
+        if (!availableTypes.contains(t.name)) {
             throw RuntimeException("Unknown `" + t.name + "` type");
         }
     }
@@ -43,13 +43,13 @@ fun checkType(t: TLType, availableTypes: HashSet<String>)
 fun checkDefinition(definition: TLDefinition)
 {
     // Checking supported types
-    for(constr in definition.contructors)
+    for (constr in definition.contructors)
     {
-        if (constr.tlType is TLTypeGeneric){
+        if (constr.tlType is TLTypeGeneric) {
             throw RuntimeException("Generic types are not supported as custom types")
         }
         checkType(constr.tlType);
-        for(p in constr.parameters)
+        for (p in constr.parameters)
         {
             checkType(p.tlType);
         }
@@ -57,25 +57,25 @@ fun checkDefinition(definition: TLDefinition)
 
     // Type system constraints
     var availableTypes = HashSet<String>()
-    for(builtIn in BuiltInTypes){
+    for (builtIn in BuiltInTypes) {
         availableTypes.add(builtIn)
     }
 
-    for(constr in definition.contructors){
-        if (constr.tlType is TLTypeRaw){
+    for (constr in definition.contructors) {
+        if (constr.tlType is TLTypeRaw) {
             availableTypes.add((constr.tlType as TLTypeRaw).name);
         }
     }
 
-    for(constr in definition.contructors){
-        for(p in constr.parameters)
+    for (constr in definition.contructors) {
+        for (p in constr.parameters)
         {
             checkType(p.tlType)
         }
     }
 
-    for(constr in definition.methods){
-        for(p in constr.parameters)
+    for (constr in definition.methods) {
+        for (p in constr.parameters)
         {
             checkType(p.tlType)
         }
@@ -85,15 +85,15 @@ fun checkDefinition(definition: TLDefinition)
 
 fun getTypeReference(sourceType: TLType, types: HashMap<String, TLTypeDef>): TLTypeDef
 {
-    return if (sourceType is TLTypeRaw){
+    return if (sourceType is TLTypeRaw) {
         var rawType = sourceType as TLTypeRaw
-        if (BuiltInTypes.any {(x) -> rawType.name == x } ){
+        if (BuiltInTypes.any {(x) -> rawType.name == x } ) {
             TLBuiltInTypeDef(rawType.name)
         }
-        else{
+        else {
             types.get(rawType.name)!!
         }
-    } else if (sourceType is TLTypeAny){
+    } else if (sourceType is TLTypeAny) {
         TLAnyTypeDef()
     } else if (sourceType is TLTypeGeneric)
     {
@@ -104,7 +104,7 @@ fun getTypeReference(sourceType: TLType, types: HashMap<String, TLTypeDef>): TLT
     {
         TLFunctionalTypeDef()
     }
-    else{
+    else {
         throw RuntimeException("Unknown type")
     }
 }
@@ -120,15 +120,15 @@ fun buildModel(definition: TLDefinition): TLModel
 
     // Prepopulate all types without constructors in combined types
     // to avoid issueses with references
-    for(constr in definition.contructors){
-        if (constr.tlType is TLTypeGeneric){
+    for (constr in definition.contructors) {
+        if (constr.tlType is TLTypeGeneric) {
             throw RuntimeException("Generics are not supported as custom types");
-        } else if (constr.tlType is TLTypeRaw){
+        } else if (constr.tlType is TLTypeRaw) {
             if (BuiltInTypes.any {(x) -> (constr.tlType as TLTypeRaw).name == x } )
             {
                 throw RuntimeException("Founed " + constr.toString() + " for built-in type");
             }
-            else{
+            else {
                 var rawType = constr.tlType as TLTypeRaw;
                 if (!typeMap.containsKey(rawType.name))
                 {
@@ -147,13 +147,13 @@ fun buildModel(definition: TLDefinition): TLModel
 
     // Fill all constructors
 
-    for(constr in definition.contructors){
-        if (constr.tlType is TLTypeRaw){
+    for (constr in definition.contructors) {
+        if (constr.tlType is TLTypeRaw) {
             var rawType = constr.tlType as TLTypeRaw;
             var typedef = typeMap.get(rawType.name) as TLCombinedTypeDef
 
             var paramDefs = ArrayList<TLParameterDef>()
-            for(p in constr.parameters){
+            for (p in constr.parameters) {
                 paramDefs.add(buildParameterDef(p, typeMap))
             }
             var constrDef = TLConstructorDef(constr.name, constr.id, paramDefs)
@@ -163,12 +163,12 @@ fun buildModel(definition: TLDefinition): TLModel
 
     var methods = ArrayList<TLMethodDef>()
 
-    for (method in definition.methods){
+    for (method in definition.methods) {
 
         var returnType = getTypeReference(method.tlType, typeMap)
 
         var paramDefs = ArrayList<TLParameterDef>()
-        for(p in method.parameters){
+        for (p in method.parameters) {
             paramDefs.add(buildParameterDef(p, typeMap))
         }
 

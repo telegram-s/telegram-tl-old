@@ -263,7 +263,7 @@ var JavaSerializeBytes = """
         writeTLBytes(this.{int}, stream);"""
 
 var JavaDeserializeBytes = """
-        this.{int} = readTLBytes(stream);"""
+        this.{int} = readTLBytes(stream, context);"""
 
 var JavaSerializeObject = """
         writeTLObject(this.{int}, stream);"""

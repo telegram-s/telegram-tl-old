@@ -7,11 +7,11 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="KotlinJavaRuntime" level="project" />
+    <orderEntry type="library" name="KotlinJavaRuntime (2)" level="project" />
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/jackson-core-2.2.3.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/jackson-annotations-2.2.3.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -20,7 +20,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/jackson-annotations-2.2.3.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/jackson-core-2.2.3.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

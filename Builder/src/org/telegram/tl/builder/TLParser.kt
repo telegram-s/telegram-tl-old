@@ -15,11 +15,11 @@ import java.util.ArrayList
  */
 
 fun createTypeFromName(name: String): TLType {
-    return if (name == "X"){
+    return if (name == "X") {
         TLTypeAny()
-    }else if (name == "!X"){
+    } else if (name == "!X") {
         TLTypeFunctional("X")
-    }else if (name.contains("<") && name.contains(">")){
+    } else if (name.contains("<") && name.contains(">")) {
         var tlName = name.substring(0, name.indexOf("<"))
         var genericName = name.substring(name.indexOf("<") + 1);
         genericName = genericName.substring(0, genericName.indexOf(">"))
@@ -37,7 +37,7 @@ fun buildFromJson(root: JsonNode): TLDefinition
     var sourceMethods = ArrayList<TLMethod>()
 
     var constructors = root.get("constructors") as JsonNode
-    for(i in constructors)
+    for (i in constructors)
     {
         var name = i.get("predicate")!!.textValue()!!.toString()
 
@@ -45,7 +45,7 @@ fun buildFromJson(root: JsonNode): TLDefinition
 
         var rawType = i.get("type")!!.textValue().toString()
 
-        if (IgnoredTypes.any {(x) -> rawType == x }){
+        if (IgnoredTypes.any {(x) -> rawType == x }) {
             continue
         }
 
@@ -54,7 +54,7 @@ fun buildFromJson(root: JsonNode): TLDefinition
         var constructorParameters = ArrayList<TLParameter>()
 
         var paramsNode = i.get("params");
-        for(p in paramsNode!!.iterator()){
+        for (p in paramsNode!!.iterator()) {
             var paramName = p.get("name")!!.textValue().toString()
             var paramType = p.get("type")!!.textValue().toString()
             constructorParameters.add(TLParameter(paramName, createTypeFromName(paramType)));
@@ -64,7 +64,7 @@ fun buildFromJson(root: JsonNode): TLDefinition
     }
 
     var methods = root.get("methods") as JsonNode
-    for(i in methods)
+    for (i in methods)
     {
         var name = i.get("method")!!.textValue()!!.toString()
 
@@ -77,7 +77,7 @@ fun buildFromJson(root: JsonNode): TLDefinition
         var constructorParameters = ArrayList<TLParameter>()
 
         var paramsNode = i.get("params");
-        for(p in paramsNode!!.iterator()){
+        for (p in paramsNode!!.iterator()) {
             var paramName = p.get("name")!!.textValue().toString()
             var paramType = p.get("type")!!.textValue().toString()
             constructorParameters.add(TLParameter(paramName, createTypeFromName(paramType)));

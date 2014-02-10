@@ -17,12 +17,12 @@ fun File.recursiveFind(filter: (file: File) -> Boolean): List<File> {
     var res = ArrayList<File>()
     var stack = ArrayList<File>()
     stack.add(this)
-    while(stack.size() > 0) {
+    while (stack.size() > 0) {
         var item = stack.remove(0);
         var files = item.listFiles()
         if (files != null)
         {
-            for(f in files!!) {
+            for (f in files!!) {
                 if (f.isDirectory()) {
                     stack.add(f);
                 }
@@ -54,7 +54,7 @@ fun compileClasses(srcFolder: String, workingFolder: String, destFolder: String)
 
     var files = File(srcFolder).recursiveFind {(x) -> x.extension == "java" };
 
-    for(f in files) {
+    for (f in files) {
         args += f.getAbsolutePath() + " ";
     }
 
@@ -66,7 +66,7 @@ fun buildJar(classesFolder: String, jarName: String, workingFolder: String) {
     var args = "";
     var files = File(workingFolder + "/" + classesFolder).recursiveFind {(x) -> x.extension == "class" };
 
-    for(f in files) {
+    for (f in files) {
         args += f.getAbsolutePath().substring((workingFolder + "/" + classesFolder + "/").size) + " ";
     }
 

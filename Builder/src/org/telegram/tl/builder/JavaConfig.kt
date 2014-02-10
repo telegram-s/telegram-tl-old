@@ -36,10 +36,10 @@ fun mapJavaPackage(typedef: TLCombinedTypeDef): String {
 }
 
 fun mapJavaTypeName(typedef: TLCombinedTypeDef): String {
-    return if (typedef.constructors.size() == 1){
+    return if (typedef.constructors.size() == 1) {
         JavaClassPrefix + typedef.name.skipNamespace().uCamelCase()
     }
-    else{
+    else {
         JavaClassPrefix + JavaAbstractClassPrefix + typedef.name.skipNamespace().uCamelCase()
     }
 }

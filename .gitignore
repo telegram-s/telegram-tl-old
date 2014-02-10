@@ -1,3 +1,5 @@
 core/build
 core/.gradle
 definitions.json
+Builder/work
+Builder/.idea

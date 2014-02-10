@@ -24,11 +24,11 @@ class JavaTypeObject(var tlType: TLCombinedTypeDef)
         if (!IgnoreUniting.any {(x) -> x == tlType.name })
         {
             var baseConstructor = constructors.first!!;
-            @outer for(p in baseConstructor.parameters){
+            @outer for (p in baseConstructor.parameters) {
                 var pName = p.tlParameterDef.name
                 var pType = p.tlParameterDef.typeDef
 
-                for(constr in constructors)
+                for (constr in constructors)
                 {
                     var hasParameter = false
                     for (cP in constr.parameters)
@@ -94,7 +94,7 @@ class JavaTypeBuiltInReference(tlReference: TLBuiltInTypeDef) : JavaTypeReferenc
     "long" -> "long"
     "double" -> "double"
     "string" -> "String"
-    "bytes" -> "byte[]"
+    "bytes" -> "TLBytes"
     "Bool" -> "boolean"
     else -> throw RuntimeException("Unsupported built in reference: " + tlReference.name)
 })
