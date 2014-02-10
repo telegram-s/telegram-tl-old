@@ -42,6 +42,6 @@ http://telegram.org/
 
 [![Telegram S](https://developer.android.com/images/brand/en_generic_rgb_wo_45.png)](https://play.google.com/store/apps/details?id=org.telegram.android "Telegram S")
 
-Licence
+License
 ----------------
-Compiler uses [MIT Licence](LICENCE)
+Compiler uses [MIT License](LICENSE)
