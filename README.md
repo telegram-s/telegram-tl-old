@@ -17,7 +17,7 @@ Write in console:
 
 Generating api library
 -----------
-1. Download latest release version of tl-core library at [tl-core releases page](https://github.com/ex3ndr/telegram-tl-core/releases), rename jar file to "tl-core.jar" and put to working folder.
+1. Download latest release version of tl-core library at [tl-core releases page](https://github.com/ex3ndr/telegram-tl-core/releases), **rename jar file to "tl-core.jar"** and put to working folder.
 2. Get json-cheme of required api-level at http://core.telegram.org/schema and put it to same working folder.
 3. Run tl-builder on this files
 4. Add compiled tl-api.jar to your project
