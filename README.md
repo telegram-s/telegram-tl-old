@@ -34,7 +34,7 @@ English: http://core.telegram.org/mtproto/TL
 
 Russian: http://dev.stel.com/mtproto/TL
 
-####Telegraph project
+####Telegram project
 
 http://telegram.org/
 
